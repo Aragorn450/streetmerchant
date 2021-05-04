@@ -70,18 +70,14 @@ async function main() {
   });
 
   config.browser.userAgent = await browser.userAgent();
-  const selectedStores = config.store.stores.map(store => store.name);
 
   for (const store of storeList.values()) {
-    // Only proceed if the store is one the user choose to use
-    if (selectedStores.includes(store.name)) {
-      logger.debug('store links', {meta: {links: store.links}});
-      if (store.setupAction !== undefined) {
-        store.setupAction(browser);
-      }
-
-      setTimeout(tryLookupAndLoop, getSleepTime(store), browser, store);
+    logger.debug('store links', {meta: {links: store.links}});
+    if (store.setupAction !== undefined) {
+      store.setupAction(browser);
     }
+
+    setTimeout(tryLookupAndLoop, getSleepTime(store), browser, store);
   }
 
   await startAPIServer();
